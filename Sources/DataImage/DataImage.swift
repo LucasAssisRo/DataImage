@@ -62,7 +62,7 @@ public struct DataImage<Placeholder>: View where Placeholder: View {
 public extension DataImage {
     init(
         data: Data,
-        isResizable: Bool = false,
+        isResizable: Bool = true,
         aspectRatio: CGFloat? = nil,
         contentMode: ContentMode = .fill,
         imageTransition: AnyTransition = AnyTransition.scale.animation(.spring()),
@@ -78,7 +78,7 @@ public extension DataImage {
 
     init(
         data: Data,
-        isResizable: Bool = false,
+        isResizable: Bool = true,
         aspectRatio: CGFloat? = nil,
         contentMode: ContentMode = .fill,
         imageTransition: AnyTransition = AnyTransition.scale.animation(.spring()),
