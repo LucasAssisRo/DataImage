@@ -18,6 +18,8 @@ public struct DataImage<Placeholder>: View where Placeholder: View {
     private final class ViewModel: ObservableObject {
         @Published var image: UIImage?
 
+        init(image: UIImage) { self.image = image }
+
         init(data: Data) {
             DispatchQueue.global(qos: .userInteractive).async {
                 let image = UIImage(data: data)
@@ -86,6 +88,40 @@ public extension DataImage {
     ) {
         self.init(
             data: data,
+            isResizable: isResizable,
+            aspectRatio: aspectRatio,
+            contentMode: contentMode,
+            imageTransition: imageTransition,
+            placeholder: placeholder
+        )
+    }
+
+    init(
+        image: UIImage,
+        isResizable: Bool = true,
+        aspectRatio: CGFloat? = nil,
+        contentMode: ContentMode = .fill,
+        imageTransition: AnyTransition = AnyTransition.scale.animation(.spring()),
+        placeholder: @escaping () -> Placeholder
+    ) {
+        self._viewModel = .init(wrappedValue: .init(image: image))
+        self.isResizable = isResizable
+        self.aspectRatio = aspectRatio
+        self.contentMode = contentMode
+        self.imageTransition = imageTransition
+        self.placeholder = placeholder
+    }
+
+    init(
+        image: UIImage,
+        isResizable: Bool = true,
+        aspectRatio: CGFloat? = nil,
+        contentMode: ContentMode = .fill,
+        imageTransition: AnyTransition = AnyTransition.scale.animation(.spring()),
+        placeholder: @autoclosure @escaping () -> Placeholder
+    ) {
+        self.init(
+            image: image,
             isResizable: isResizable,
             aspectRatio: aspectRatio,
             contentMode: contentMode,
