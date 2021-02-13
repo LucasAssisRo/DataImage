@@ -95,39 +95,24 @@ public extension DataImage {
             placeholder: placeholder
         )
     }
+}
 
+// MARK: - DataImage + UIImage
+
+extension DataImage where Placeholder == EmptyView {
     init(
         image: UIImage,
         isResizable: Bool = true,
         aspectRatio: CGFloat? = nil,
         contentMode: ContentMode = .fill,
-        imageTransition: AnyTransition = AnyTransition.scale.animation(.spring()),
-        placeholder: @escaping () -> Placeholder
+        imageTransition: AnyTransition = AnyTransition.scale.animation(.spring())
     ) {
         self._viewModel = .init(wrappedValue: .init(image: image))
         self.isResizable = isResizable
         self.aspectRatio = aspectRatio
         self.contentMode = contentMode
         self.imageTransition = imageTransition
-        self.placeholder = placeholder
-    }
-
-    init(
-        image: UIImage,
-        isResizable: Bool = true,
-        aspectRatio: CGFloat? = nil,
-        contentMode: ContentMode = .fill,
-        imageTransition: AnyTransition = AnyTransition.scale.animation(.spring()),
-        placeholder: @autoclosure @escaping () -> Placeholder
-    ) {
-        self.init(
-            image: image,
-            isResizable: isResizable,
-            aspectRatio: aspectRatio,
-            contentMode: contentMode,
-            imageTransition: imageTransition,
-            placeholder: placeholder
-        )
+        self.placeholder = EmptyView.init
     }
 }
 
