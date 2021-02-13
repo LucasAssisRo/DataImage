@@ -12,7 +12,7 @@ Wrapper around **SwiftUI's** `Image` allowing asyncronous loading from `Data` ob
 
 ```swift
 Group {
-    Image(data: someData) { PlaceholderView() }
+    Image(data: someData) { ProgressView() }
     Image(image: someUIImage)
 }
 ```
