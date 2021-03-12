@@ -10,21 +10,21 @@ import SwiftUI
 
 // MARK: - DataImageCache
 
-//private enum DataImageCache {
-//    private static var shared: NSCache<NSData, UIImage> = {
-//        let cache = NSCache<NSData, UIImage>()
-//        cache.countLimit = 20
-//        return cache
-//    }()
-//
-//    static subscript(_ data: Data) -> UIImage? {
-//        get { shared.object(forKey: data as NSData) }
-//        set {
-//            newValue.map { shared.setObject($0, forKey: data as NSData) }
-//                ?? shared.removeObject(forKey: data as NSData)
-//        }
-//    }
-//}
+private enum DataImageCache {
+    private static var shared: NSCache<NSData, UIImage> = {
+        let cache = NSCache<NSData, UIImage>()
+        cache.countLimit = 20
+        return cache
+    }()
+
+    static subscript(_ data: Data) -> UIImage? {
+        get { shared.object(forKey: data as NSData) }
+        set {
+            newValue.map { shared.setObject($0, forKey: data as NSData) }
+                ?? shared.removeObject(forKey: data as NSData)
+        }
+    }
+}
 
 // MARK: - DataImage
 
@@ -38,17 +38,16 @@ public struct DataImage<Placeholder>: View where Placeholder: View {
 
         init(image: UIImage) {
             self.image = image
-//            image.pngData().map { DataImageCache[$0] = image }
+            image.pngData().map { DataImageCache[$0] = image }
         }
 
         init(data: Data) {
-//            DataImageCache[data].map { image = $0 }
-//                ??
-                DispatchQueue.global(qos: .userInteractive).async {
+            DataImageCache[data].map { image = $0 }
+                ?? DispatchQueue.global(qos: .userInteractive).async {
                     let image = UIImage(data: data)
                     DispatchQueue.main.async {
                         self.image = image
-//                        DataImageCache[data] = image
+                        DataImageCache[data] = image
                     }
                 }
         }
