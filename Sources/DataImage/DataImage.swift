@@ -45,7 +45,7 @@ public struct DataImage<Placeholder>: View where Placeholder: View {
             DataImageCache[data].map { image = $0 }
                 ?? DispatchQueue.global(qos: .userInteractive).async {
                     var image = UIImage(data: data)
-                    if Bundle.main.bundlePath.hasSuffix(".appex") { image = image?.clammped(to: 1_000_000) }
+                    if Bundle.main.bundlePath.hasSuffix(".appex") { image = image?.clammped(to: 500_000) }
                     DispatchQueue.main.async {
                         self.image = image
                         DataImageCache[data] = image
