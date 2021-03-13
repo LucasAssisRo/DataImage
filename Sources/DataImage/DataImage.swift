@@ -44,7 +44,8 @@ public struct DataImage<Placeholder>: View where Placeholder: View {
         init(data: Data) {
             DataImageCache[data].map { image = $0 }
                 ?? DispatchQueue.global(qos: .userInteractive).async {
-                    let image = UIImage(data: data)
+                    var image = UIImage(data: data)
+                    if Bundle.main.bundlePath.hasSuffix(".appex") { image = image?.clammped(to: 1_000_000) }
                     DispatchQueue.main.async {
                         self.image = image
                         DataImageCache[data] = image
@@ -144,5 +145,38 @@ extension DataImage where Placeholder == EmptyView {
 struct DataImage_Previews: PreviewProvider {
     static var previews: some View {
         DataImage(data: .init()) { EmptyView() }
+    }
+}
+
+private extension CGSize {
+    var area: CGFloat { width * height }
+
+    func aspectDownscaledIfNeededTo(targetArea: CGFloat) -> CGSize {
+        let ratio: CGFloat = rootScaleFactor(targetArea: targetArea)
+        return ratio < 1 ? .init(width: width * ratio, height: height * ratio) : self
+    }
+
+    func rootScaleFactor(targetArea: CGFloat) -> CGFloat {
+        sqrt(targetArea / area)
+    }
+}
+
+private extension UIImage {
+    func clammped(to area: CGFloat) -> UIImage? {
+        let finalImage: UIImage?
+
+        if size.area < area {
+            finalImage = self
+        } else {
+            let targetSize = size.aspectDownscaledIfNeededTo(targetArea: area)
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = 1
+            format.opaque = false
+
+            finalImage = UIGraphicsImageRenderer(size: targetSize, format: format)
+                .image { _ in self.draw(in: .init(origin: .zero, size: targetSize)) }
+        }
+
+        return finalImage
     }
 }
