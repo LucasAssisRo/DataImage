@@ -10,18 +10,18 @@ import SwiftUI
 
 // MARK: - DataImageCache
 
-private enum DataImageCache {
-    private static var shared: NSCache<NSData, UIImage> = {
+public enum DataImageCache {
+    public static var shared: NSCache<NSData, UIImage>? = {
         let cache = NSCache<NSData, UIImage>()
         cache.countLimit = 20
         return cache
     }()
 
-    static subscript(_ data: Data) -> UIImage? {
-        get { shared.object(forKey: data as NSData) }
+    public static subscript(_ data: Data) -> UIImage? {
+        get { shared?.object(forKey: data as NSData) }
         set {
-            newValue.map { shared.setObject($0, forKey: data as NSData) }
-                ?? shared.removeObject(forKey: data as NSData)
+            newValue.flatMap { shared?.setObject($0, forKey: data as NSData) }
+                ?? shared?.removeObject(forKey: data as NSData)
         }
     }
 }
