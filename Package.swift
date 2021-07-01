@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "DataImage",
     platforms: [
-        .macOS(.v11), .iOS(.v14), .watchOS(.v7)
+        .macOS(.v11), .iOS(.v14), .watchOS(.v7), .tvOS(.v14)
     ],
     products: [
         .library(
