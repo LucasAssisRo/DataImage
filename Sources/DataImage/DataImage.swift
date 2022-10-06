@@ -1,11 +1,3 @@
-//
-//  DataImage.swift
-//  recipes
-//
-//  Created by Lucas Assis Rodrigues on 13.02.21.
-//
-
-import Foundation
 import SwiftUI
 
 // MARK: - DataImageCache
@@ -29,10 +21,6 @@ public enum DataImageCache {
 // MARK: - DataImage
 
 public struct DataImage<Placeholder>: View where Placeholder: View {
-    #if os(macOS)
-        private typealias UIImage = NSImage
-    #endif
-
     private final class ViewModel: ObservableObject {
         @Published var image: UIImage?
 
@@ -146,3 +134,14 @@ struct DataImage_Previews: PreviewProvider {
         DataImage(data: .init()) { EmptyView() }
     }
 }
+
+#if os(macOS)
+    public typealias UIImage = NSImage
+    extension NSImage {
+        func pngData() -> Data? {
+            cgImage(forProposedRect: nil, context: nil, hints: nil)
+                .map(NSBitmapImageRep.init)?
+                .representation(using: NSBitmapImageRep.FileType.png, properties: [:])
+        }
+    }
+#endif
