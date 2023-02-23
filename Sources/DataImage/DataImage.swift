@@ -42,7 +42,6 @@ public struct DataImage: View {
     }
 
     @StateObject private var viewModel: ViewModel
-    private let imageTransition: AnyTransition
     private let isResizable: Bool
     private let aspectRatio: CGFloat?
     private let contentMode: ContentMode
@@ -51,7 +50,6 @@ public struct DataImage: View {
         if let image = viewModel.image {
             imageView(image: image)
                 .aspectRatio(aspectRatio, contentMode: contentMode)
-                .transition(imageTransition)
         }
     }
 
@@ -74,14 +72,12 @@ public extension DataImage {
         data: Data,
         isResizable: Bool = true,
         aspectRatio: CGFloat? = nil,
-        contentMode: ContentMode = .fill,
-        imageTransition: AnyTransition = AnyTransition.scale.animation(.spring())
+        contentMode: ContentMode = .fill
     ) {
         self._viewModel = .init(wrappedValue: .init(data: data))
         self.isResizable = isResizable
         self.aspectRatio = aspectRatio
         self.contentMode = contentMode
-        self.imageTransition = imageTransition
     }
 }
 
