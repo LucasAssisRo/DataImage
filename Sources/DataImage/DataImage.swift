@@ -53,9 +53,7 @@ public struct DataImage<Placeholder>: View where Placeholder: View {
             imageView(image: image)
                 .aspectRatio(aspectRatio, contentMode: contentMode)
                 .transition(imageTransition)
-        } else {
-            placeholder().transition(imageTransition)
-        }
+        } 
     }
 
     private func imageView(image: UIImage) -> Image {
