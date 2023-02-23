@@ -20,7 +20,7 @@ public enum DataImageCache {
 
 // MARK: - DataImage
 
-public struct DataImage<Placeholder>: View where Placeholder: View {
+public struct DataImage: View {
     private final class ViewModel: ObservableObject {
         @Published var image: UIImage?
 
@@ -46,14 +46,13 @@ public struct DataImage<Placeholder>: View where Placeholder: View {
     private let isResizable: Bool
     private let aspectRatio: CGFloat?
     private let contentMode: ContentMode
-    private let placeholder: () -> Placeholder
 
     public var body: some View {
         if let image = viewModel.image {
             imageView(image: image)
                 .aspectRatio(aspectRatio, contentMode: contentMode)
                 .transition(imageTransition)
-        } 
+        }
     }
 
     private func imageView(image: UIImage) -> Image {
@@ -76,60 +75,22 @@ public extension DataImage {
         isResizable: Bool = true,
         aspectRatio: CGFloat? = nil,
         contentMode: ContentMode = .fill,
-        imageTransition: AnyTransition = AnyTransition.scale.animation(.spring()),
-        placeholder: @escaping () -> Placeholder
+        imageTransition: AnyTransition = AnyTransition.scale.animation(.spring())
     ) {
         self._viewModel = .init(wrappedValue: .init(data: data))
         self.isResizable = isResizable
         self.aspectRatio = aspectRatio
         self.contentMode = contentMode
         self.imageTransition = imageTransition
-        self.placeholder = placeholder
-    }
-
-    init(
-        data: Data,
-        isResizable: Bool = true,
-        aspectRatio: CGFloat? = nil,
-        contentMode: ContentMode = .fill,
-        imageTransition: AnyTransition = AnyTransition.scale.animation(.spring()),
-        placeholder: @autoclosure @escaping () -> Placeholder
-    ) {
-        self.init(
-            data: data,
-            isResizable: isResizable,
-            aspectRatio: aspectRatio,
-            contentMode: contentMode,
-            imageTransition: imageTransition,
-            placeholder: placeholder
-        )
     }
 }
 
-// MARK: - DataImage + UIImage
-
-extension DataImage where Placeholder == EmptyView {
-    init(
-        image: UIImage,
-        isResizable: Bool = true,
-        aspectRatio: CGFloat? = nil,
-        contentMode: ContentMode = .fill,
-        imageTransition: AnyTransition = AnyTransition.scale.animation(.spring())
-    ) {
-        self._viewModel = .init(wrappedValue: .init(image: image))
-        self.isResizable = isResizable
-        self.aspectRatio = aspectRatio
-        self.contentMode = contentMode
-        self.imageTransition = imageTransition
-        self.placeholder = EmptyView.init
-    }
-}
 
 // MARK: - DataImage_Previews
 
 struct DataImage_Previews: PreviewProvider {
     static var previews: some View {
-        DataImage(data: .init()) { EmptyView() }
+        DataImage(data: .init())
     }
 }
 
